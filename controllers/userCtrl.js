@@ -14,16 +14,13 @@ const userCtrl = {
             if(password.length < 6) 
                 return res.status(400).json({msg: "Password is at least 6 characters long."})
 
-            // Password Encryption
             const passwordHash = await bcrypt.hash(password, 10)
             const newUser = new Users({
                 name, email, password: passwordHash
             })
 
-            // Save mongodb
             await newUser.save()
 
-            // Then create jsonwebtoken to authentication
             const accesstoken = createAccessToken({id: newUser._id})
             const refreshtoken = createRefreshToken({id: newUser._id})
 
@@ -49,7 +46,7 @@ const userCtrl = {
             const isMatch = await bcrypt.compare(password, user.password)
             if(!isMatch) return res.status(400).json({msg: "Incorrect password."})
 
-            // If login success , create access token and refresh token
+       
             const accesstoken = createAccessToken({id: user._id})
             const refreshtoken = createRefreshToken({id: user._id})
 
